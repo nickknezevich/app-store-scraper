@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String   @db.VarChar(255)
+  token      String   @db.VarChar(255)
+  first_name String   @db.VarChar(255)
+  last_name  String   @db.VarChar(255)
+  full_name  String?  @db.VarChar(255)
+  image_url  String?  @db.VarChar(255)
+  roles      Json?    @db.Json()
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("users")
+}
+
+model SyncEntry {
+  id         Int      @id @default(autoincrement())
+  sync_uuid  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("sync_entries")
+}
+
+model AppInfomation {
+  id              Int         @id @default(autoincrement())
+  app_ratings     AppRating[]
+  app_reviews     AppReview[]
+  internal_app_id String      @db.VarChar(20)
+  app_id          String
+  title           String
+  icon            String      @db.VarChar(500)
+  url             String
+  price           Float
+  currency        String
+  is_free         Boolean
+  description     String      @db.VarChar(1000)
+  developer       String
+  developer_url   String
+  developer_id    Int
+  genres          Json?
+  genres_ids      Json?
+  released        DateTime
+  updated         DateTime
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+
+  @@map("app_informations")
+}
+
+model AppReview {
+  id                 BigInt           @unique
+  app_information    AppInfomation @relation(fields: [app_information_id], references: [id])
+  app_information_id Int
+  username           String
+  user_url           String
+  version            String
+  score              Int
+  title              String
+  text               String        @db.Text()
+  url                String
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+
+  @@map("app_reviews")
+}
+
+model AppRating {
+  id                 Int           @id @default(autoincrement())
+  app_information    AppInfomation @relation(fields: [app_information_id], references: [id])
+  app_information_id Int           @unique
+  ratings            Int           @db.UnsignedInt()
+  histogram          Json
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+
+  @@map("app_ratings")
+}

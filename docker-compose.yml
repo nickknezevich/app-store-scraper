@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+
+  scraper.server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: 'develop-stage'
+    container_name: scraper.server
+    volumes:
+      - './server/:/var/www/html'
+      - /var/www/html/node_modules
+    command: bash -c "yarn start --debug --watch"
+    ports:
+      - 3018:3000
+      - 9229:9229
+    restart: unless-stopped
+    depends_on:
+      - scraper.mysql
+    networks:
+      - scraper.network
+    
+  scraper.client:
+    build:
+      context: ./client
+      target: 'develop-stage'
+      dockerfile: Dockerfile
+    container_name: scraper.client
+    ports:
+      - 8000:5173
+    restart: unless-stopped
+    volumes:
+      - './client:/app'
+      - /app/node_modules
+    tty: true
+    networks:
+      - scraper.network
+
+  scraper.mysql:
+    image: mysql:8.0
+    container_name: scraper.mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./docker/data/db:/var/lib/mysql
+    restart: always
+    networks:
+      - scraper.network
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3316:3306"
+
+volumes:
+  scraper.mysql:
+
+networks:
+  scraper.network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.5.0/25
