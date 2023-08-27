@@ -1,4 +1,4 @@
-# recogniz
+# app-store-scraper
 Mini and rather simplified ERP api which should administer customers, products, inventories, warehoses. WIP
 
 ## Instalation

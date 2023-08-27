@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^6.0.2",
     "axios": "^1.4.0",
     "moment": "^2.29.4",
     "pinia": "^2.1.6",

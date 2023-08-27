@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-export const coreApiUrl = 'http://127.0.0.1:3016';
+export const coreApiUrl = 'http://127.0.0.1:3018';
 
 console.log("CORE API", import.meta.env.VITE_CORE_API)
 

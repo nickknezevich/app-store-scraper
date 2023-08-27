@@ -1,18 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PublicLayout from '@/layouts/PublicLayout.vue'
-import SocialLayout from '@/layouts/SocialLayout.vue';
 import LoginView from '../views/LoginView.vue'
-import PostsView from '../views/PostsView.vue'
 import { useAuthStore } from '../stores/auth.store';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'Home',
+      component: AdminLayout,
+      redirect: '/',
+      children: [
+        {
+          path: '/',
+          name: 'Home',
+          component: HomeView
+        }
+      ]
     },
     {
       path: '/login',
@@ -24,19 +31,6 @@ const router = createRouter({
           path: '/login',
           name: 'Login',
           component: LoginView
-        }
-      ]
-    },
-    {
-      path: '/posts',
-      name: 'Posts',
-      component: SocialLayout,
-      redirect: '/posts',
-      children: [
-        {
-          path: '/posts',
-          name: 'Posts',
-          component: PostsView
         }
       ]
     }
