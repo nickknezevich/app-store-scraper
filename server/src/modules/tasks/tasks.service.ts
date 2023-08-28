@@ -12,15 +12,14 @@ export class TasksService {
 
 
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  //@Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async syncITuneApps() {
     this.logger.debug('Syncing I Tune Apps Every Hour');
     try {
 
 
       const lastEntry = await this.prisma.syncEntry.findFirst({
-        orderBy: { created_at: 'desc' },
+        orderBy: { updated_at: 'desc' },
       });
 
       console.log(lastEntry)

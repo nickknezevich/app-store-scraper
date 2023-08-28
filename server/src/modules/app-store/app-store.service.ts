@@ -4,6 +4,7 @@ import { PrismaService } from 'src/services/prisma.service';
 import { UserProvider } from 'src/users/user.provider';
 import { User } from '@prisma/client';
 import { AppStoreFilter } from './filters/app-store.filter';
+import { Application } from './types/application.type';
 
 
 @Injectable()
@@ -18,16 +19,34 @@ export class AppStoreService {
         return this.userProvider.user;
     }
 
-    async list(filter: AppStoreFilter): Promise<unknown | HttpException> {
+    async list(filter: AppStoreFilter): Promise<any[] | HttpException> {
         try {
-            const appInfo = await appStoreScraper.search(
+            const applications = await this.prisma.appInfomation.findMany(
                 {
-
-                    num: 10,
-                    term: "minecraft"
+                    where: {
+                        ...(filter.min_released_date ? {
+                            released: {
+                                gte: new Date(filter.min_released_date)
+                            }
+                        } : {}),
+                        ...(filter.min_updated_date ? {
+                            updated: {
+                                gte: new Date(filter.min_updated_date)
+                            }
+                        } : {})
+                    },
                 }
             );
-            return appInfo;
+            // console.log(applications)
+            return applications;
+
+            // const appInfo = await appStoreScraper.search(
+            //     {
+            //         num: 100,
+            //         term: "minecraft"
+            //     }
+            // );
+            // return appInfo;
         } catch (error) {
             console.log(error)
             throw new HttpException('There was a problem while retreiving object from the ITunes Store', HttpStatus.INTERNAL_SERVER_ERROR)
@@ -73,23 +92,23 @@ export class AppStoreService {
                 sort: appStoreScraper.sort.HELPFUL,
             });
 
-            response.forEach(async element => {
+            // response.forEach(async element => {
 
-                await this.prisma.appReview.create({
-                    data: {
-                        id: parseInt(element.id),
-                        app_information_id: appRecord.id,
-                        username: element.userName,
-                        user_url: element.userUrl,
-                        version: element.version,
-                        score: element.score,
-                        title: element.title,
-                        text: element.text,
-                        url: element.url,
-                    }
-                })
+            //     await this.prisma.appReview.create({
+            //         data: {
+            //             id: parseInt(element.id),
+            //             app_information_id: appRecord.id,
+            //             username: element.userName,
+            //             user_url: element.userUrl,
+            //             version: element.version,
+            //             score: element.score,
+            //             title: element.title,
+            //             text: element.text,
+            //             url: element.url,
+            //         }
+            //     })
 
-            })
+            // })
 
             return response;
         } catch (error) {
@@ -103,7 +122,7 @@ export class AppStoreService {
         try {
             const response = await appStoreScraper.ratings({ id });
 
-            // find the internal app id
+            //find the internal app id
             const app = await this.prisma.appInfomation.findFirst({
                 where: {
                     internal_app_id: id
