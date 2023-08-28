@@ -5,7 +5,7 @@
 
 ## Uncomment to use this redirect for Single Page Applications
 ## Not needed for static site generators.
-[[redirects]]
+[redirects]
   from = "/*"
   to = "/index.html"
   status = 200
