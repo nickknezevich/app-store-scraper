@@ -33,7 +33,7 @@ export const useChatGptStore = defineStore({
         chatGPTresponse: null,
         isLoading: false,
         isCompleted: false,
-        message: null,
+        message: '',
         errors: null
     }),
     actions: {

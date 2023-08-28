@@ -15,7 +15,7 @@ type User = {
 type State = {
     user: User | null
     isAuthenticated: boolean
-    returnUrl: null
+    returnUrl: string
 }
 
 export const useAuthStore = defineStore({
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore({
         // initialize state from local storage to enable user to stay logged in
         user: JSON.parse(localStorage.getItem('user') as string),
         isAuthenticated: false,
-        returnUrl: null
+        returnUrl: ''
     }),
     actions: {
         async login(username: string, password: string): Promise<void> {

@@ -8,14 +8,26 @@ import ApplicationReviews from '../components/ApplicationReviews.vue'
 import ApplicationRatings from '../components/ApplicationRatings.vue'
 const applicationsStore = useApplicationsStore();
 const { applications, application, reviews, ratings, isLoadingApplications, isLoadingApplication, errors } = storeToRefs(applicationsStore);
-const minReleasedDate = ref(null);
-const minUpdatedDate = ref(null);
+const minReleasedDate = ref('');
+const minUpdatedDate = ref('');
 const selected = ref(null)
 
-const dataTableSettings = {
-	itemsPerPage: 10,
-	headers: [
-		{
+type DataTableHeader = {
+    key: string;
+    title: string;
+    colspan?: number;
+    rowspan?: number;
+    fixed?: boolean;
+    align?: 'start' | 'end';
+    width?: number;
+    minWidth?: string;
+    maxWidth?: string;
+    sortable?: boolean;
+};
+
+
+const headers:DataTableHeader[]  = [
+{
 			title: 'Title',
 			align: 'start',
 			sortable: false,
@@ -39,7 +51,12 @@ const dataTableSettings = {
 			sortable: false,
 			key: 'updated',
 		}
-	]
+  ]
+
+
+
+const dataTableSettings = {
+	itemsPerPage: 10,
 }
 
 const page = ref(1);
@@ -51,7 +68,7 @@ const searchApplications = async () => {
 	})
 }
 
-const handleRowClick = async (item, row) => {
+const handleRowClick = async (item: any, row: any) => {
 	await applicationsStore.getApplicationById(row.item.raw.internal_app_id)
 	await applicationsStore.getReviewsByAppId(row.item.raw.app_id)
 	// setting 1000 delay because of the rate limit: 2 requests per second
@@ -87,20 +104,12 @@ onMounted(async () => {
 
 	</form>
 	<v-container fluid>
-
-		<v-data-table v-model:page="page" v-model:page-count="applications.length"
-			:items-per-page="dataTableSettings.itemsPerPage" :headers="dataTableSettings.headers" :items="applications"
-			:loading="isLoadingApplications" v-model="selected" item-selectable select-strategy="single" class="elevation-1"
+		<v-data-table v-if="applications !== null" v-model:page="page" v-model:page-count="applications.length"
+			:items-per-page="dataTableSettings.itemsPerPage" :headers="headers" :items="applications"
+			:loading="isLoadingApplications" item-selectable select-strategy="single" class="elevation-1"
 			@click:row="handleRowClick" height="300px">
-			<template v-slot:item.icon="{ item }">
-				<div class="p-2">
-					<v-img :src="item.icon" height="32px"></v-img>
-				</div>
-			</template>
-
-
+			
 		</v-data-table>
-
 	</v-container>
 	<v-container fluid>
 		<v-row align="start">

@@ -44,10 +44,8 @@ export type ApplicationRating = {
 }
 
 export type Filter = {
-    page: number
-    num_per_page: number
-    min_released_date: string
-    min_updated_date: string
+    min_released_date: string | null
+    min_updated_date: string | null
 }
 
 export const useApplicationsStore = defineStore({
@@ -64,7 +62,7 @@ export const useApplicationsStore = defineStore({
         errors: null
     }),
     actions: {
-        async getApplications(filter: Filter) {
+        async getApplications(filter?: Filter) {
             this.isLoadingApplications = true;
             connector.get('/api/store', {
                 params: filter,
@@ -82,7 +80,7 @@ export const useApplicationsStore = defineStore({
             if (this.applications) {
                 const app = this.applications[0];
                 this.isLoadingApplication = true;
-                connector.get(`/api/store/${app.appId}`, {
+                connector.get(`/api/store/${app.app_id}`, {
                     headers: {
                         Authorization: `Bearer ${user.access_token}`
                     }

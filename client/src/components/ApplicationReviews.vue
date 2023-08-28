@@ -1,16 +1,13 @@
 <script setup lang="ts">
 
-import { defineProps } from 'vue';
 import { storeToRefs } from 'pinia';
-import { Application, ApplicationReview } from '@/stores/applications.store';
 import { useApplicationsStore } from '@/stores/applications.store';
-import moment from 'moment';
 
 const applicationsStore = useApplicationsStore();
-const { isloadingReviews } = storeToRefs(applicationsStore);
+const { isLoadingReviews } = storeToRefs(applicationsStore);
 
 interface Props {
-    reviews: ApplicationReview
+    reviews: any
 }
 
 const props = defineProps<Props>()
@@ -40,7 +37,7 @@ const props = defineProps<Props>()
         <div v-if="!reviews">
             <div class="pl-4" style="color: #4e4e4d">select application from the list</div>
         </div>
-        <div v-if="isloadingReviews === true">
+        <div v-if="isLoadingReviews === true">
             <v-container>
                 <v-row>
                     <v-col cols="12" md="6">

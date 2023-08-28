@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { storeToRefs } from 'pinia';
-import { ApplicationRating } from '@/stores/applications.store';
+import { type ApplicationRating } from '@/stores/applications.store';
 import { useApplicationsStore } from '@/stores/applications.store';
 
 const applicationsStore = useApplicationsStore();
-const { isloadingRatings } = storeToRefs(applicationsStore);
+const { isLoadingRatings } = storeToRefs(applicationsStore);
 import moment from 'moment';
 
 interface Props {
-    ratings: ApplicationRating
+    ratings: any
 }
 
 const props = defineProps<Props>()
 
-const calculateAverageRating = (histogramData) => {
+const calculateAverageRating = (histogramData: any) => {
     let sum = 0;
     let totalRatings = 0;
 

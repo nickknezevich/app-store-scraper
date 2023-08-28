@@ -7,12 +7,10 @@ const { handleSubmit, handleReset } = useForm({
     validationSchema: {
         username(value: string) {
             if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
-
             return 'Must be a valid e-mail.'
         },
         password(value: string) {
             if (value) return true
-
             return 'Name needs to be at least 2 characters.'
         }
     },
@@ -21,15 +19,15 @@ const username = useField('username')
 const password = useField('password')
 const validationError = ref()
 
-const submit = handleSubmit((values: { username: any; password: any; }) => {
+const submit = handleSubmit(values => {
     const authStore = useAuthStore();
-    const { username, password } = values;
-
-    return authStore.login(username, password)
-        .catch(error => {
-           validationError.value = error.response.data.errors.message;
-        });
+    try {
+        authStore.login(values.username, values.password);
+    } catch (error: any) {
+        validationError.value = error.response.data.errors.message;
+    }
 })
+
 </script>
 
 <template>
@@ -46,25 +44,24 @@ const submit = handleSubmit((values: { username: any; password: any; }) => {
                             </p>
                         </div>
                         <v-card class="mx-auto login-form" max-width="344">
-                                <div class="m-sm-3">
-                                    <form @submit.prevent="submit">
-                                        <v-text-field v-model="username.value.value" variant="outlined"
-                                            :error-messages="username.errorMessage.value" label="Email"
-                                            class="mb-2"></v-text-field>
+                            <div class="m-sm-3">
+                                <form @submit.prevent="submit">
+                                    <v-text-field v-model="username.value.value" variant="outlined"
+                                        :error-messages="username.errorMessage.value" label="Email"
+                                        class="mb-2"></v-text-field>
 
-                                        <v-text-field v-model="password.value.value"
-                                            :error-messages="password.errorMessage.value" label="Password"
-                                            variant="outlined" class="mb-2"></v-text-field>
+                                    <v-text-field v-model="password.value.value"
+                                        :error-messages="password.errorMessage.value" label="Password" variant="outlined"
+                                        class="mb-2"></v-text-field>
 
+                                    <button class="w-100 btn btn-lg btn-success">
+                                        Login
+                                    </button>
+                                    <div class="mt-3 text-error" color="text-error" v-show="validationError">{{
+                                        validationError }}</div>
+                                </form>
+                            </div>
 
-                                        <button class="w-100 btn btn-lg btn-success">
-                                            
-                                            Login
-                                        </button>
-                                        <div class="mt-3 text-error" color="text-error" v-show="validationError">{{ validationError }}</div>
-                                    </form>
-                                </div>
-                            
                         </v-card>
                     </div>
                 </div>

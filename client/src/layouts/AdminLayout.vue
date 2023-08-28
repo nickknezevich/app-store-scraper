@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../stores/auth.store';
 const authStore = useAuthStore();  
-
+const user = JSON.parse(localStorage.getItem('user') as string);
 const logout = () => {
   authStore.logout();
 }
@@ -17,7 +17,7 @@ const logout = () => {
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props" class="d-block text-center mx-auto mb-9" variant="text">
             <v-avatar class="" size="32"
-        :image="authStore.user.image_url"></v-avatar>
+        :image="user.image_url"></v-avatar>
           </v-btn>
         </template>
         <v-list density="compact">
