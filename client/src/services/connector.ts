@@ -1,6 +1,7 @@
 import Axios from "axios";
 
 export const coreApiUrl = 'http://127.0.0.1:3018';
+//export const coreApiUrl = 'https://seahorse-app-a95hr.ondigitalocean.app/app-store-scraper-server2';
 
 console.log("CORE API", import.meta.env.VITE_CORE_API)
 

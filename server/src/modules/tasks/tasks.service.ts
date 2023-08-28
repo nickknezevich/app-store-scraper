@@ -12,7 +12,7 @@ export class TasksService {
 
 
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async syncITuneApps() {
     this.logger.debug('Syncing I Tune Apps Every Hour');
     try {
@@ -33,7 +33,7 @@ export class TasksService {
         return;
       }
 
-      if (lastEntry && this.isWithinAMinute(lastEntry.updated_at)) {
+      if (lastEntry && this.isWithinAnHour(lastEntry.updated_at)) {
         this.logger.debug('No synchronization needed');
 
       } else {
