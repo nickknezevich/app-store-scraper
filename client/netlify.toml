@@ -1,3 +1,11 @@
 [build]
-  command = "yarn build && mkdir build && cp index.html build && cp -r dist build/dist"
-  publish = "build"
+  command = "vite build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+## Uncomment to use this redirect for Single Page Applications
+## Not needed for static site generators.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
