@@ -70,8 +70,11 @@ export class AppStoreService {
 
     async app(id: string): Promise<unknown | HttpException> {
         try {
-            const appInfo = await appStoreScraper.app({ id: id });
-            return appInfo;
+            return await this.prisma.appInfomation.findUnique({
+                where: {
+                    id
+                }
+            })
         } catch (error) {
             console.log(error)
             throw new HttpException('There was a problem while retreiving object from the ITunes Store', HttpStatus.INTERNAL_SERVER_ERROR)

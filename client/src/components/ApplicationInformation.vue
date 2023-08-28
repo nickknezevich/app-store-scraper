@@ -34,6 +34,7 @@ const getFeedback = async () => {
 			title: props.application.title,
 			app_id: props.application.app_id
 		},
+		ratings: props.ratings,
 		reviews: props.reviews.splice(0, 10),
 		question: 'Based on the provided data, determine if there are any common themes of issues and how the app could be improved?'
 	}
@@ -48,69 +49,60 @@ const getFeedback = async () => {
 		<template v-slot:title>
 			Application Information
 		</template>
+		<template v-slot:text v-if="application">
+			{{ application.description.substring(0, 300) }} ...
+      	</template>
 		<v-list height="100%" v-if="application">
 			<v-list-item>
 				<v-list-item-title>
 					Title
 				</v-list-item-title>
-				<v-list-item-text class="text-blue-grey-lighten-3">
+				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.title }}
-				</v-list-item-text>
+				</v-list-item-subtitle>
 			</v-list-item>
 
 			<v-list-item>
 				<v-list-item-title>
 					App ID
 				</v-list-item-title>
-				<v-list-item-text class="text-blue-grey-lighten-3">
+				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.app_id }}
-				</v-list-item-text>
+				</v-list-item-subtitle>
 			</v-list-item>
 
 			<v-list-item>
 				<v-list-item-title>
 					Description
 				</v-list-item-title>
-				<v-list-item-text class="text-blue-grey-lighten-3">
+				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.description.substring(0, 300) }} ...
-				</v-list-item-text>
+				</v-list-item-subtitle>
 			</v-list-item>
 
 			<v-list-item>
 				<v-list-item-title>
 					Released
 				</v-list-item-title>
-				<v-list-item-text class="text-blue-grey-lighten-3">
+				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.released }}
-				</v-list-item-text>
+				</v-list-item-subtitle>
 			</v-list-item>
 
 			<v-list-item>
 				<v-list-item-title>
 					Released
 				</v-list-item-title>
-				<v-list-item-text class="text-blue-grey-lighten-3">
+				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.updated }}
-				</v-list-item-text>
+				</v-list-item-subtitle>
+				
 			</v-list-item>
 			<v-list-item><v-btn color="success" @click="getFeedback">Get Feedback</v-btn></v-list-item>
 		</v-list>
+
 		<div v-if="!application">
 			<div class="pl-4" style="color: #4e4e4d">select application from the list</div>
-		</div>
-		<div v-if="isLoadingApplication">
-			<v-container>
-				<v-row>
-					<v-col cols="12" md="6">
-						<v-skeleton-loader class="mx-auto border" max-width="300"
-							type="card-avatar, actions"></v-skeleton-loader>
-					</v-col>
-
-					<v-col cols="12" md="6">
-						<v-skeleton-loader class="mx-auto border" max-width="300" type="image, article"></v-skeleton-loader>
-					</v-col>
-				</v-row>
-			</v-container>
 		</div>
 	</v-card>
 	<v-dialog v-model="dialogInfo.show" width="800">

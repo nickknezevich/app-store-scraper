@@ -100,7 +100,7 @@ onMounted(async () => {
 		<v-data-table v-if="applications !== null" v-model:page="page" v-model:page-count="applications.length"
 			:items-per-page="dataTableSettings.itemsPerPage" :headers="headers" :items="applications"
 			:loading="isLoadingApplications" item-selectable select-strategy="single" class="elevation-1"
-			@click:row="handleRowClick" height="300px">
+			@click:row="handleRowClick" fixed-header height="300px">
 			
 		</v-data-table>
 	</v-container>
