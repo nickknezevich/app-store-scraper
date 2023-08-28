@@ -14,7 +14,6 @@ import {
     code: number;
     message: string;
     data: T;
-    pagination: T
   }
   
   @Injectable()
@@ -32,8 +31,7 @@ import {
             id: uuidV4(),
             code: context.switchToHttp().getResponse().statusCode,
             message: 'Success',
-            data: data.report_data ?? data,
-            pagination: data.pagination ?? {}
+            data: data
           })),
         );
       }
