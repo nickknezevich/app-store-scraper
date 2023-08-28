@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { Application, ApplicationRating, ApplicationReview } from '@/stores/applications.store';
 import { useChatGptStore } from '@/stores/chat-gpt.store';
+import moment from 'moment';
 
 const chatGptStore = useChatGptStore();
 const { chatGPTresponse, message, isLoading, isCompleted } = storeToRefs(chatGptStore);
-
-import moment from 'moment';
 
 interface Props {
 	application: Application
@@ -70,7 +69,7 @@ const getFeedback = async () => {
 					App ID
 				</v-list-item-title>
 				<v-list-item-text class="text-blue-grey-lighten-3">
-					{{ application.appId }}
+					{{ application.app_id }}
 				</v-list-item-text>
 			</v-list-item>
 

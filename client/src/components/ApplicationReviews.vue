@@ -2,12 +2,12 @@
 
 import { defineProps } from 'vue';
 import { storeToRefs } from 'pinia';
-import { Application, ApplicationReview } from '../../stores/applications.store';
+import { Application, ApplicationReview } from '@/stores/applications.store';
 import { useApplicationsStore } from '@/stores/applications.store';
+import moment from 'moment';
 
 const applicationsStore = useApplicationsStore();
 const { isloadingReviews } = storeToRefs(applicationsStore);
-import moment from 'moment';
 
 interface Props {
     reviews: ApplicationReview
@@ -16,6 +16,7 @@ interface Props {
 const props = defineProps<Props>()
 
 </script>
+
 <template>
     <v-card class="flex" height="500px">
         <template v-slot:title class="ml-1">

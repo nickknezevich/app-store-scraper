@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { storeToRefs } from 'pinia';
-import { Application, ApplicationRating } from '../../stores/applications.store';
+import { ApplicationRating } from '@/stores/applications.store';
 import { useApplicationsStore } from '@/stores/applications.store';
 
 const applicationsStore = useApplicationsStore();
