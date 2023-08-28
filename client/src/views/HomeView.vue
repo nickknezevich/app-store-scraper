@@ -15,12 +15,6 @@ const selected = ref(null)
 const dataTableSettings = {
 	itemsPerPage: 10,
 	headers: [
-		// {
-		//     title: 'Icon',
-		//     align: 'start',
-		//     sortable: false,
-		//     key: 'icon',
-		// },
 		{
 			title: 'Title',
 			align: 'start',
@@ -60,8 +54,12 @@ const searchApplications = async () => {
 const handleRowClick = async (item, row) => {
 	await applicationsStore.getApplicationById(row.item.raw.internal_app_id)
 	await applicationsStore.getReviewsByAppId(row.item.raw.app_id)
-	await applicationsStore.getRatingsByAppId(row.item.raw.internal_app_id)
+	// setting 1000 delay because of the rate limit: 2 requests per second
+	setTimeout(async function () {
+		await applicationsStore.getRatingsByAppId(row.item.raw.internal_app_id)
+	}, 1500);
 }
+
 
 onMounted(async () => {
 	await applicationsStore.getApplications();
@@ -93,13 +91,14 @@ onMounted(async () => {
 
 		<v-data-table v-model:page="page" v-model:page-count="applications.length"
 			:items-per-page="dataTableSettings.itemsPerPage" :headers="dataTableSettings.headers" :items="applications"
-			:loading="isLoadingApplications" v-model="selected"
-  class="elevation-1" @click:row="handleRowClick"  height="300px">
+			:loading="isLoadingApplications" v-model="selected" item-selectable select-strategy="single" class="elevation-1"
+			@click:row="handleRowClick" height="300px">
 			<template v-slot:item.icon="{ item }">
 				<div class="p-2">
 					<v-img :src="item.icon" height="32px"></v-img>
 				</div>
 			</template>
+
 
 		</v-data-table>
 
@@ -107,15 +106,14 @@ onMounted(async () => {
 	<v-container fluid>
 		<v-row align="start">
 			<v-col sm="6" md="4">
-				<ApplicationInformation :application="application" :ratings="ratings" :reviews="reviews"/>
+				<ApplicationInformation :application="application" :ratings="ratings" :reviews="reviews" />
 			</v-col>
 			<v-col sm="6" md="4">
-				<ApplicationRatings  :ratings="ratings"/>
+				<ApplicationRatings :ratings="ratings" />
 			</v-col>
 			<v-col sm="6" md="4">
-				<ApplicationReviews  :reviews="reviews"/>
+				<ApplicationReviews :reviews="reviews" />
 			</v-col>
-
 		</v-row>
 	</v-container>
 </template>
@@ -123,6 +121,22 @@ onMounted(async () => {
 <style>
 body {
 	height: 100vh;
+}
+
+.v-data-table tbody tr.v-data-table__selected {
+	background: #f5c17d70 !important;
+}
+
+.v-data-table tbody tr.v-data-table__selected {
+	background: #a17b4970 !important;
+}
+
+.v-data-table tbody tr.v-data-table__selected:hover {
+	background: #a17b49c2 !important;
+}
+
+.v-data-table tbody tr.v-data-table__selected:hover {
+	background: #ffd296d2 !important;
 }
 </style>
   

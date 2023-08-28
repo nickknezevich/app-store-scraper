@@ -36,18 +36,16 @@ model SyncEntry {
 }
 
 model AppInfomation {
-  id              Int         @id @default(autoincrement())
-  app_ratings     AppRating[]
-  app_reviews     AppReview[]
-  internal_app_id String      @db.VarChar(20)
+  id              String   @id
+  internal_app_id String   @db.VarChar(20)
   app_id          String
   title           String
-  icon            String      @db.VarChar(500)
+  icon            String   @db.VarChar(500)
   url             String
   price           Float
   currency        String
   is_free         Boolean
-  description     String      @db.VarChar(1000)
+  description     String   @db.VarChar(1000)
   developer       String
   developer_url   String
   developer_id    Int
@@ -55,37 +53,34 @@ model AppInfomation {
   genres_ids      Json?
   released        DateTime
   updated         DateTime
-  created_at      DateTime    @default(now())
-  updated_at      DateTime    @updatedAt
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 
   @@map("app_informations")
 }
 
 model AppReview {
-  id                 BigInt           @unique
-  app_information    AppInfomation @relation(fields: [app_information_id], references: [id])
-  app_information_id Int
-  username           String
-  user_url           String
-  version            String
-  score              Int
-  title              String
-  text               String        @db.Text()
-  url                String
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
+  id         String   @unique
+  app_id     String
+  username   String
+  user_url   String
+  version    String
+  score      Int
+  title      String
+  text       String   @db.Text()
+  url        String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("app_reviews")
 }
 
 model AppRating {
-  id                 Int           @id @default(autoincrement())
-  app_information    AppInfomation @relation(fields: [app_information_id], references: [id])
-  app_information_id Int           @unique
-  ratings            Int           @db.UnsignedInt()
-  histogram          Json
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
+  id         String   @unique
+  ratings    Int      @db.UnsignedInt()
+  histogram  Json
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("app_ratings")
 }

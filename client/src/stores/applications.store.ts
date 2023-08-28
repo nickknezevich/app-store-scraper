@@ -27,9 +27,10 @@ export type Application = {
 }
 
 export type ApplicationReview = {
-    id: number
-    userName: string
-    userUrl: string
+    id: string
+    app_id: number
+    username: string
+    user_url: string
     version: string
     score: number
     title: string
@@ -120,7 +121,7 @@ export const useApplicationsStore = defineStore({
                     this.isLoadingReviews = false;
                 })
         },
-        async getRatingsByAppId(id: number) {
+        async getRatingsByAppId(id: string) {
             this.isLoadingRatings = true;
             connector.get(`/api/store/ratings/${id}`, {
                 headers: {

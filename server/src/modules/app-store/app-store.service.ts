@@ -87,30 +87,49 @@ export class AppStoreService {
                 }
             })
 
-            const response = await appStoreScraper.reviews({
-                appId: id,
-                sort: appStoreScraper.sort.HELPFUL,
-            });
+            const records = await this.prisma.appReview.findMany({
+                where: {
+                    app_id: appRecord.id
+                }
+            })
 
-            // response.forEach(async element => {
+            if (records.length === 0) {
 
-            //     await this.prisma.appReview.create({
-            //         data: {
-            //             id: parseInt(element.id),
-            //             app_information_id: appRecord.id,
-            //             username: element.userName,
-            //             user_url: element.userUrl,
-            //             version: element.version,
-            //             score: element.score,
-            //             title: element.title,
-            //             text: element.text,
-            //             url: element.url,
-            //         }
-            //     })
+                const response = await appStoreScraper.reviews({
+                    appId: id,
+                    sort: appStoreScraper.sort.HELPFUL,
+                });
 
-            // })
+                await response.forEach(async element => {
+                    await this.prisma.appReview.create({
+                        data: {
+                            id: element.id,
+                            app_id: appRecord.id,
+                            username: element.userName,
+                            user_url: element.userUrl,
+                            version: element.version,
+                            score: element.score,
+                            title: element.title,
+                            text: element.text,
+                            url: element.url,
+                        }
+                    })
 
-            return response;
+                })
+                
+                const records = await this.prisma.appReview.findMany({
+                    where: {
+                        app_id: appRecord.id
+                    }
+                })
+
+                return records;
+
+            } else {
+                return records;
+            }
+
+
         } catch (error) {
             console.log(error)
             throw new HttpException('There was a problem while retreiving object from the ITunes Store', HttpStatus.INTERNAL_SERVER_ERROR)
@@ -120,32 +139,27 @@ export class AppStoreService {
     async ratings(id: string): Promise<unknown | HttpException> {
         console.log(id)
         try {
-            const response = await appStoreScraper.ratings({ id });
-
-            //find the internal app id
-            const app = await this.prisma.appInfomation.findFirst({
-                where: {
-                    internal_app_id: id
-                }
-            })
-
             const record = await this.prisma.appRating.findUnique({
                 where: {
-                    app_information_id: app.id
+                    id: id
                 }
             })
-
+            const app = await this.prisma.appInfomation.findFirst({
+                where: {
+                    id: id
+                }
+            })
             if (!record) {
+                const response = await appStoreScraper.ratings({ id });
                 await this.prisma.appRating.create({
                     data: {
-                        app_information_id: app.id,
+                        id: app.id,
                         ratings: response.ratings,
                         histogram: response.histogram
                     }
                 })
             }
-
-            return response;
+            return record;
         } catch (error) {
             console.log(error)
             throw new HttpException('There was a problem while retreiving object from the ITunes Store', HttpStatus.INTERNAL_SERVER_ERROR)

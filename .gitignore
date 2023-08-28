@@ -3,6 +3,7 @@
 /node_modules
 /docker
 /server/uploads
+/server/.env
 
 # Logs
 logs

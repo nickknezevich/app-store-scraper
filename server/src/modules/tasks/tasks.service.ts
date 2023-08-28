@@ -12,7 +12,7 @@ export class TasksService {
 
 
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async syncITuneApps() {
     this.logger.debug('Syncing I Tune Apps Every Hour');
     try {
@@ -33,12 +33,17 @@ export class TasksService {
         return;
       }
 
-      if (lastEntry && this.isWithinAnHour(lastEntry.updated_at)) {
+      if (lastEntry && this.isWithinAMinute(lastEntry.updated_at)) {
         this.logger.debug('No synchronization needed');
 
       } else {
         this.logger.debug('Synchronization within an hour');
-        await this.syncAndSave();
+        await this.prisma.syncEntry.create({
+          data: {
+            sync_uuid: uuid()
+          }
+        });
+        //await this.syncAndSave();
         this.logger.debug('Sync Completed');
       }
     } catch (error) {
@@ -54,6 +59,13 @@ export class TasksService {
     return date >= hourAgo;
   }
 
+  private isWithinAMinute(date: Date): boolean {
+    const now = new Date();
+    const minuteAgo = new Date(now);
+    minuteAgo.setMinutes(now.getMinutes() - 1);
+    return date >= minuteAgo;
+  }
+
   private async syncAndSave() {
     const appInfo = await appStoreScraper.search(
       {
@@ -65,6 +77,7 @@ export class TasksService {
     appInfo.forEach(async element => {
       await this.prisma.appInfomation.create({
         data: {
+          id: String(element.id),
           internal_app_id: String(element.id),
           app_id: element.appId,
           title: element.title,

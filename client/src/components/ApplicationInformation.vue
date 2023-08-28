@@ -22,6 +22,10 @@ const dialogInfo = ref({
 	text: null
 });
 
+const closeDialog = () => {
+     dialogInfo.value.show = false;
+}
+
 const getFeedback = async () => {
 	const message = {
 		application: {
@@ -103,13 +107,14 @@ const getFeedback = async () => {
 		<div v-if="!application">
 			<div class="pl-4" style="color: #4e4e4d">select application from the list</div>
 		</div>
+		
 	</v-card>
 	<v-dialog v-model="dialogInfo.show" width="800">
 		<v-card>
 			<v-card-title>
-				<span class="text-h5">Chat GPT Service Feedback</span>
+				<span class="text-h5">Chat GPT Service Feedback <v-btn class="float-right" @click="closeDialog" variant="text">x</v-btn></span>
 			</v-card-title>
-			<v-card-text>
+			<v-card-text class="mb-2">
 				{{ message }}
 			</v-card-text>
 		</v-card>
