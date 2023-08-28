@@ -1,9 +1,6 @@
 import Axios from "axios";
 
-export const coreApiUrl = 'http://127.0.0.1:3018';
-//export const coreApiUrl = 'https://seahorse-app-a95hr.ondigitalocean.app/app-store-scraper-server2';
-
-console.log("CORE API", import.meta.env.VITE_CORE_API)
+export const coreApiUrl = import.meta.env.VITE_CORE_API_URL;
 
 export const connector = Axios.create({
   baseURL: coreApiUrl,
@@ -17,9 +14,9 @@ const authToken = localStorage.getItem('user');
 connector.interceptors.response.use(response => {
   return response;
 }, error => {
-  // if (error.response.status === 401) {
-  //     console.log('token expired',error.response)
-  //     localStorage.removeItem('user');
-  // }
+  if (error.response.status === 401) {
+      console.log('token expired',error.response)
+      localStorage.removeItem('user');
+  }
   return Promise.reject(error);
 });

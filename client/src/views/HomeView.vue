@@ -25,7 +25,6 @@ type DataTableHeader = {
     sortable?: boolean;
 };
 
-
 const headers:DataTableHeader[]  = [
 {
 			title: 'Title',
@@ -53,8 +52,6 @@ const headers:DataTableHeader[]  = [
 		}
   ]
 
-
-
 const dataTableSettings = {
 	itemsPerPage: 10,
 }
@@ -74,16 +71,12 @@ const handleRowClick = async (item: any, row: any) => {
 	// setting 1000 delay because of the rate limit: 2 requests per second
 	setTimeout(async function () {
 		await applicationsStore.getRatingsByAppId(row.item.raw.internal_app_id)
-	}, 1500);
+	}, 3000);
 }
 
 onMounted(async () => {
 	await applicationsStore.getApplications();
-	//await applicationsStore.getInitialApplication();
-	console.log("Mounted", true)
-
 });
-
 
 </script>
 <template>

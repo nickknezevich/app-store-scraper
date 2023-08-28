@@ -15,11 +15,11 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-    <v-card class="flex" height="500px">
+    <v-card class="flex" height="500px" :loading="isLoadingReviews">
         <template v-slot:title class="ml-1">
             Reviews
         </template>
-        <div v-if="reviews">
+        <div v-if="reviews" class="reviews">
             <v-card-item v-for="review in reviews" :key="review.id">
                 <span class="float-right mt-3 mr-3 text-caption text--darken-4" color="light-blue-lighten-3"
                     style="color: #4e4e4d">{{ review.updated }}</span>
@@ -36,21 +36,6 @@ const props = defineProps<Props>()
         </div>
         <div v-if="!reviews">
             <div class="pl-4" style="color: #4e4e4d">select application from the list</div>
-        </div>
-        <div v-if="isLoadingReviews === true">
-            <v-container>
-                <v-row>
-                    <v-col cols="12" md="6">
-                        <v-skeleton-loader class="mx-auto border" max-width="300"
-                            type="card-avatar, actions"></v-skeleton-loader>
-                    </v-col>
-
-                    <v-col cols="12" md="6">
-                        <v-skeleton-loader class="mx-auto border" max-width="300" type="image, article"></v-skeleton-loader>
-                    </v-col>
-                </v-row>
-            </v-container>
-
         </div>
     </v-card>
 </template>

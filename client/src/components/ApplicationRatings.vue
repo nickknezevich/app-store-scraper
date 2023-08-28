@@ -29,7 +29,7 @@ const calculateAverageRating = (histogramData: any) => {
 
 </script>
 <template>
-    <v-card class="mx-auto" height="500">
+    <v-card class="mx-auto" height="500" :loading="isLoadingRatings">
         <template v-slot:title class="ml-1">
             Rating Overview
         </template>
@@ -44,7 +44,7 @@ const calculateAverageRating = (histogramData: any) => {
 
             <v-list bg-color="transparent" class="d-flex flex-column-reverse" density="compact">
 
-                <v-list-item>
+                <v-list-item key="1">
                     <v-progress-linear :model-value="ratings.histogram['1']" :max="ratings.ratings" class="mx-n5" color="orange-darken-4"
                         height="20" rounded></v-progress-linear>
 
@@ -59,11 +59,9 @@ const calculateAverageRating = (histogramData: any) => {
                         </div>
                     </template>
                 </v-list-item>
-
-                <v-list-item>
+                <v-list-item key="2">
                     <v-progress-linear :model-value="ratings.histogram['2']" :max="ratings.ratings" class="mx-n5" color="orange-lighten-2"
                         height="20" rounded></v-progress-linear>
-
                     <template v-slot:prepend>
                         <span>2</span>
                         <v-icon icon="mdi-star" class="mx-3"></v-icon>
@@ -75,8 +73,7 @@ const calculateAverageRating = (histogramData: any) => {
                         </div>
                     </template>
                 </v-list-item>
-
-                <v-list-item>
+                <v-list-item key="3">
                     <v-progress-linear :model-value="ratings.histogram['3']" :max="ratings.ratings" class="mx-n5" color="lime-lighten-1"
                         height="20" rounded></v-progress-linear>
 
@@ -91,8 +88,7 @@ const calculateAverageRating = (histogramData: any) => {
                         </div>
                     </template>
                 </v-list-item>
-
-                <v-list-item>
+                <v-list-item key="4">
                     <v-progress-linear :model-value="ratings.histogram['4']" :max="ratings.ratings" class="mx-n5" color="green-lighten-2"
                         height="20" rounded></v-progress-linear>
 
@@ -107,38 +103,19 @@ const calculateAverageRating = (histogramData: any) => {
                         </div>
                     </template>
                 </v-list-item>
-
-                <v-list-item>
+                <v-list-item key="5">
                     <v-progress-linear :model-value="ratings.histogram['5']" :max="ratings.ratings" class="mx-n5" color="green-darken-1"
                         height="20" rounded></v-progress-linear>
-
                     <template v-slot:prepend>
                         <span>5</span>
                         <v-icon icon="mdi-star" class="mx-3"></v-icon>
                     </template>
-
                     <template v-slot:append>
                         <div class="rating-values">
                             <span class="d-flex justify-end"> {{ ratings.histogram['5'] }} </span>
                         </div>
                     </template>
                 </v-list-item>
-
-                <!-- <v-list-item v-for="(rating, i) in ratings.histogram" :key="i">
-                    <v-progress-linear :model-value="rating" class="mx-n5" color="yellow-darken-3" height="20"
-                        rounded></v-progress-linear>
-
-                    <template v-slot:prepend>
-                        <span>{{ rating }}</span>
-                        <v-icon icon="mdi-star" class="mx-3"></v-icon>
-                    </template>
-
-                    <template v-slot:append>
-                        <div class="rating-values">
-                            <span class="d-flex justify-end"> {{ rating * 224 }} </span>
-                        </div>
-                    </template>
-                </v-list-item> -->
             </v-list>
         </div>
         <div v-if="!ratings">

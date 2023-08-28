@@ -39,6 +39,7 @@ export const useChatGptStore = defineStore({
     actions: {
         async getFeedback(question: object) {
             this.isLoading = true;
+            this.isCompleted = false;
             this.message = 'Loading data';
             connector.post('/api/chat-gpt/completion', {
                 question: JSON.stringify(question),
@@ -54,7 +55,8 @@ export const useChatGptStore = defineStore({
                 )
                 .catch(error => this.errors = error)
                 .finally(() => {
-                    this.isCompleted = false;
+                    this.isLoading = false;
+                    this.isCompleted = true;
                 })
         }
     }
