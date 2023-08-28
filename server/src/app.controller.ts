@@ -15,9 +15,4 @@ export class AppController {
   } {
     return this.appService.healthCheck();
   }
-
-  @Get('images/:filename')
-  async serveImage(@Res() res: Response, @Param('filename') filename: string ) {
-    return (await this.fileService.serveImage(filename)).pipe(res);
-  }
 }

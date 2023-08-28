@@ -60,7 +60,6 @@ const handleRowClick = async (item, row) => {
 	}, 1500);
 }
 
-
 onMounted(async () => {
 	await applicationsStore.getApplications();
 	//await applicationsStore.getInitialApplication();
