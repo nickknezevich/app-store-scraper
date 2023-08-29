@@ -91,7 +91,7 @@ const getFeedback = async () => {
 
 			<v-list-item>
 				<v-list-item-title>
-					Released
+					Updated
 				</v-list-item-title>
 				<v-list-item-subtitle class="text-blue-grey-lighten-3">
 					{{ application.updated }}

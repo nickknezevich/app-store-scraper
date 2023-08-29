@@ -75,6 +75,7 @@ const searchApplications = async () => {
 }
 
 const handleRowClick = async (item: any, row: any) => {
+	selectedItem.value = row.item.raw.id;
 	await applicationsStore.getApplicationById(row.item.raw.internal_app_id)
 	await applicationsStore.getReviewsByAppId(row.item.raw.app_id)
 	// setting 1000 delay because of the rate limit: 2 requests per second
@@ -111,8 +112,13 @@ onMounted(async () => {
 			:loading="isLoadingApplications" item-selectable select-strategy="single" class="elevation-1"
 			@click:row="handleRowClick" fixed-header height="300px">
 
+			<template v-slot:item.id="{ item }">
+				{{ item.columns.id }}
+			</template>
+
 			<template v-slot:item.title="{ item }">
-				<strong>{{ item.columns.title }}</strong>
+				<strong v-if="item.columns.id==selectedItem" style="color: orange">{{ item.columns.title }}</strong>
+				<strong v-else>{{ item.columns.title }}</strong>
 			</template>
 			<template v-slot:item.released="{ item }">
 				{{ moment(item.columns.released).format('MM/DD/YYYY HH:mm') }}
@@ -121,7 +127,7 @@ onMounted(async () => {
 				{{ moment(item.columns.updated).format('MM/DD/YYYY HH:mm') }}
 			</template>
 			<!-- TODO for selecting the row -->
-			<!-- <template v-slot:item="{ item }" :class="{'primary': item.id==selectedItem}">
+			<!-- <template v-slot:item="{ item }" :class="{'selected': item.id==selectedItem}" class="v-data-table__tr v-data-table__tr--clickable">
 				<tr>
 					<td>{{ item.columns.id }}</td>
 					<td>{{ item.columns.title }}</td>
