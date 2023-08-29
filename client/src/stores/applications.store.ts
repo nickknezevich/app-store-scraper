@@ -16,7 +16,7 @@ type State = {
 }
 
 export type Application = {
-    id: number
+    id: string
     app_id: string
     internal_app_id: string
     title: string
@@ -79,8 +79,9 @@ export const useApplicationsStore = defineStore({
         async getInitialApplication() {
             if (this.applications) {
                 const app = this.applications[0];
+                console.log("APPLICATION",app);
                 this.isLoadingApplication = true;
-                connector.get(`/api/store/${app.app_id}`, {
+                connector.get(`/api/store/${app.id}`, {
                     headers: {
                         Authorization: `Bearer ${user.access_token}`
                     }
@@ -88,12 +89,12 @@ export const useApplicationsStore = defineStore({
                     .then(application => this.application = application.data.data)
                     .catch(error => this.errors = error)
                     .finally(() => {
-                        this.isLoadingApplications = false;
+                        this.isLoadingApplication = false;
                     })
             }
 
         },
-        async getApplicationById(id: number) {
+        async getApplicationById(id: string) {
             this.isLoadingApplication = true;
             connector.get(`/api/store/${id}`, {
                 headers: {
@@ -131,7 +132,6 @@ export const useApplicationsStore = defineStore({
                 .finally(() => {
                     this.isLoadingRatings = false;
                 })
-        },
-
+        }
     }
 });
