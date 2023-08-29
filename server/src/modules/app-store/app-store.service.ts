@@ -37,16 +37,8 @@ export class AppStoreService {
                     },
                 }
             );
-            // console.log(applications)
+            
             return applications;
-
-            // const appInfo = await appStoreScraper.search(
-            //     {
-            //         num: 100,
-            //         term: "minecraft"
-            //     }
-            // );
-            // return appInfo;
         } catch (error) {
             console.log(error)
             throw new HttpException('There was a problem while retreiving object from the ITunes Store', HttpStatus.INTERNAL_SERVER_ERROR)

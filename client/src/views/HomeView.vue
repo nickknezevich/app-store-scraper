@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
-import { useApplicationsStore } from '@/stores/applications.store';
+import { useApplicationsStore, type Application } from '@/stores/applications.store';
 import ApplicationInformation from '../components/ApplicationInformation.vue'
 import ApplicationReviews from '../components/ApplicationReviews.vue'
 import ApplicationRatings from '../components/ApplicationRatings.vue'
@@ -11,52 +11,61 @@ const { applications, application, reviews, ratings, isLoadingApplications, isLo
 const minReleasedDate = ref('');
 const minUpdatedDate = ref('');
 const selected = ref(null)
+import moment from 'moment'
+import type { VDataTableRow } from 'vuetify/labs/components';
 
 type DataTableHeader = {
-    key: string;
-    title: string;
-    colspan?: number;
-    rowspan?: number;
-    fixed?: boolean;
-    align?: 'start' | 'end';
-    width?: number;
-    minWidth?: string;
-    maxWidth?: string;
-    sortable?: boolean;
+	key: string;
+	title: string;
+	colspan?: number;
+	rowspan?: number;
+	fixed?: boolean;
+	align?: 'start' | 'end';
+	width?: number;
+	minWidth?: string;
+	maxWidth?: string;
+	sortable?: boolean;
 };
 
-const headers:DataTableHeader[]  = [
-{
-			title: 'Title',
-			align: 'start',
-			sortable: false,
-			key: 'title',
-		},
-		{
-			title: 'Price',
-			align: 'start',
-			sortable: false,
-			key: 'price',
-		},
-		{
-			title: 'Released Date',
-			align: 'start',
-			sortable: false,
-			key: 'released',
-		},
-		{
-			title: 'Updated Date',
-			align: 'start',
-			sortable: false,
-			key: 'updated',
-		}
-  ]
+const headers: DataTableHeader[] = [
+	{
+		title: 'ID',
+		align: 'start',
+		sortable: false,
+		key: 'id',
+	},
+	{
+		title: 'Title',
+		align: 'start',
+		sortable: false,
+		key: 'title',
+	},
+	{
+		title: 'Price',
+		align: 'start',
+		sortable: false,
+		key: 'price',
+	},
+	{
+		title: 'Released Date',
+		align: 'start',
+		sortable: false,
+		key: 'released',
+	},
+	{
+		title: 'Updated Date',
+		align: 'start',
+		sortable: false,
+		key: 'updated',
+	}
+]
 
 const dataTableSettings = {
 	itemsPerPage: 10,
 }
 
 const page = ref(1);
+const selectedItem = ref(null)
 
 const searchApplications = async () => {
 	await applicationsStore.getApplications({
@@ -101,7 +110,27 @@ onMounted(async () => {
 			:items-per-page="dataTableSettings.itemsPerPage" :headers="headers" :items="applications"
 			:loading="isLoadingApplications" item-selectable select-strategy="single" class="elevation-1"
 			@click:row="handleRowClick" fixed-header height="300px">
-			
+
+			<template v-slot:item.title="{ item }">
+				<strong>{{ item.columns.title }}</strong>
+			</template>
+			<template v-slot:item.released="{ item }">
+				{{ moment(item.columns.released).format('MM/DD/YYYY HH:mm') }}
+			</template>
+			<template v-slot:item.updated="{ item }">
+				{{ moment(item.columns.updated).format('MM/DD/YYYY HH:mm') }}
+			</template>
+			<!-- TODO for selecting the row -->
+			<!-- <template v-slot:item="{ item }" :class="{'primary': item.id==selectedItem}">
+				<tr>
+					<td>{{ item.columns.id }}</td>
+					<td>{{ item.columns.title }}</td>
+					<td>{{ item.columns.price  }}</td>
+					<td>{{ item.columns.released }}</td>
+					<td>{{ item.columns.updated }}</td>
+					
+				</tr>
+			</template> -->
 		</v-data-table>
 	</v-container>
 	<v-container fluid>
